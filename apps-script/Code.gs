@@ -26,6 +26,8 @@ function doPost(e) {
       sheet.appendRow(HEADERS);
       sheet.setFrozenRows(1);
     }
+    // 電話欄設為純文字，避免開頭的 0 被當成數字吃掉
+    sheet.getRange('D:D').setNumberFormat('@');
 
     const now = new Date();
     const orderId = 'ML' + Utilities.formatDate(now, 'Asia/Taipei', 'yyMMddHHmmss') +
