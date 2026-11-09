@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>晨光咖啡 | 冬季限定新品</title>
+<style>
+  :root {
+    --bg: #1b120d;
+    --card: #2a1c14;
+    --accent: #f0a04b;
+    --accent-2: #e2583e;
+    --text: #fbefe3;
+    --muted: #c9b29d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 16px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(240,160,75,.25), transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(226,88,62,.25), transparent 50%),
+      var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    animation: pulse 2s infinite;
+  }
+  .cup {
+    font-size: 96px;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+  }
+  h1 {
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 900;
+    line-height: 1.2;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    margin: 16px auto 32px;
+    max-width: 560px;
+    font-size: clamp(16px, 3vw, 20px);
+    color: var(--muted);
+  }
+  .price {
+    font-size: 20px;
+    margin-bottom: 28px;
+  }
+  .price del { color: var(--muted); margin-right: 8px; }
+  .price strong { font-size: 40px; color: var(--accent); }
+  .btn {
+    display: inline-block;
+    padding: 16px 40px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(226,88,62,.4);
+    transition: transform .2s, box-shadow .2s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(226,88,62,.55); }
+
+  /* Countdown */
+  .countdown {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 36px;
+  }
+  .countdown div {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px 8px;
+    min-width: 68px;
+  }
+  .countdown span { display: block; font-size: 28px; font-weight: 800; color: var(--accent); }
+  .countdown small { color: var(--muted); font-size: 12px; }
+
+  /* Features */
+  section { padding: 72px 16px; max-width: 1000px; margin: 0 auto; }
+  h2 { text-align: center; font-size: 32px; margin-bottom: 40px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform .2s;
+  }
+  .card:hover { transform: translateY(-6px); }
+  .card .icon { font-size: 44px; margin-bottom: 12px; }
+  .card h3 { margin-bottom: 8px; color: var(--accent); }
+  .card p { color: var(--muted); font-size: 15px; }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    border-radius: 24px;
+    padding: 48px 24px;
+    margin: 0 16px 72px;
+  }
+  .cta h2 { margin-bottom: 12px; color: #fff; }
+  .cta p { margin-bottom: 24px; color: #fff3e6; }
+  .cta .btn { background: #fff; color: var(--accent-2); box-shadow: none; }
+
+  footer { text-align: center; padding: 24px 16px 40px; color: var(--muted); font-size: 13px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: transform .35s;
+    z-index: 10;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="badge">❄ 冬季限定 ❄</span>
+  <div class="cup">☕</div>
+  <h1>焦糖肉桂拿鐵<br>溫暖登場</h1>
+  <p class="sub">嚴選衣索比亞咖啡豆，搭配手工焦糖與錫蘭肉桂，<br>讓每一口都是冬天裡最暖的擁抱。</p>
+  <p class="price"><del>NT$150</del><strong>NT$99</strong> 限時優惠</p>
+  <button class="btn" onclick="getCoupon()">立即領取優惠券</button>
+
+  <div class="countdown" aria-label="優惠倒數">
+    <div><span id="d">00</span><small>天</small></div>
+    <div><span id="h">00</span><small>時</small></div>
+    <div><span id="m">00</span><small>分</small></div>
+    <div><span id="s">00</span><small>秒</small></div>
+  </div>
+</header>
+
+<section>
+  <h2>為什麼選擇晨光咖啡？</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="icon">🌱</div>
+      <h3>產地直送</h3>
+      <p>與小農直接合作，新鮮烘焙，七天內送到你手中。</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔥</div>
+      <h3>職人烘焙</h3>
+      <p>每批豆子都經過職人手工烘焙，香氣層次豐富。</p>
+    </div>
+    <div class="card">
+      <div class="icon">♻️</div>
+      <h3>環保杯優惠</h3>
+      <p>自備環保杯再折 NT$10，愛地球也愛自己。</p>
+    </div>
+  </div>
+</section>
+
+<div class="cta">
+  <h2>第二杯半價！</h2>
+  <p>找朋友一起來，分享這份冬日溫暖。</p>
+  <button class="btn" onclick="getCoupon()">我要優惠</button>
+</div>
+
+<footer>
+  © 2026 晨光咖啡 Morning Light Coffee（虛構品牌，課堂練習作品）
+</footer>
+
+<div class="toast" id="toast">🎉 優惠碼：WINTER99 已複製！</div>
+
+<script>
+  // 倒數至 7 天後的午夜
+  const end = new Date();
+  end.setDate(end.getDate() + 7);
+  end.setHours(0, 0, 0, 0);
+  const pad = n => String(n).padStart(2, "0");
+  function tick() {
+    let diff = Math.max(0, end - new Date());
+    const d = Math.floor(diff / 86400000); diff %= 86400000;
+    const h = Math.floor(diff / 3600000);  diff %= 3600000;
+    const m = Math.floor(diff / 60000);    diff %= 60000;
+    const s = Math.floor(diff / 1000);
+    document.getElementById("d").textContent = pad(d);
+    document.getElementById("h").textContent = pad(h);
+    document.getElementById("m").textContent = pad(m);
+    document.getElementById("s").textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  function getCoupon() {
+    try { navigator.clipboard.writeText("WINTER99"); } catch (e) {}
+    const t = document.getElementById("toast");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+  }
+</script>
+</body>
+</html>
