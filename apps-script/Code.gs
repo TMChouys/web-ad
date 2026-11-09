@@ -26,13 +26,11 @@ function doPost(e) {
       sheet.appendRow(HEADERS);
       sheet.setFrozenRows(1);
     }
-    // 電話欄設為純文字，避免開頭的 0 被當成數字吃掉
-    sheet.getRange('D:D').setNumberFormat('@');
 
     const now = new Date();
     const orderId = 'ML' + Utilities.formatDate(now, 'Asia/Taipei', 'yyMMddHHmmss') +
                     Math.floor(Math.random() * 90 + 10);
-    sheet.appendRow([
+    const values = [
       orderId,
       Utilities.formatDate(now, 'Asia/Taipei', 'yyyy-MM-dd HH:mm:ss'),
       name,
@@ -43,7 +41,15 @@ function doPost(e) {
       PRICES[item] * qty,          // 由伺服器計算金額，不信任前端
       clean(p.pickup, 10),
       clean(p.note, 200),
-    ]);
+    ];
+    // appendRow 會把 0912... 轉成數字而吃掉開頭的 0，
+    // 所以先把整列設成純文字格式，再用 setValues 寫入
+    const row = sheet.getLastRow() + 1;
+    const range = sheet.getRange(row, 1, 1, values.length);
+    range.setNumberFormat('@');
+    range.setValues([values]);
+    sheet.getRange(row, 7, 1, 2).setNumberFormat('0');   // 數量、合計維持數字
+    sheet.getRange(row, 7, 1, 2).setValues([[qty, PRICES[item] * qty]]);
     return json({ ok: true, orderId: orderId });
   } catch (err) {
     return json({ ok: false, error: String(err) });
@@ -53,7 +59,7 @@ function doPost(e) {
 }
 
 function doGet() {
-  return json({ ok: true, message: '晨光咖啡訂單 API 運作中' });
+  return json({ ok: true, message: '晨光咖啡訂單 API 運作中', version: 3 });
 }
 
 /** 去除空白、限制長度，並避免試算表公式注入 */
