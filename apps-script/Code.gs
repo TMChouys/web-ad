@@ -5,7 +5,15 @@
 const SPREADSHEET_ID = '14SvXC2K7rUXiYRVfYtzS1F_P93k2X-_EOtx3aiHB5XM';
 
 const HEADERS = ['訂單編號', '時間', '姓名', '電話', 'Email', '品項', '數量', '合計', '取貨方式', '備註'];
-const PRICES = { '焦糖肉桂拿鐵': 99, '經典美式': 70, '燕麥奶拿鐵': 110 };
+// 名稱與價格要和 index.html 的 PRODUCTS 一致
+const PRICES = {
+  '焦糖肉桂拿鐵': 99,
+  '經典美式': 70,
+  '燕麥奶拿鐵': 110,
+  '冰美式': 75,
+  '卡布奇諾': 95,
+  '濃縮咖啡': 60,
+};
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -59,7 +67,7 @@ function doPost(e) {
 }
 
 function doGet() {
-  return json({ ok: true, message: '晨光咖啡訂單 API 運作中', version: 3 });
+  return json({ ok: true, message: '晨光咖啡訂單 API 運作中', version: 4 });
 }
 
 /** 去除空白、限制長度，並避免試算表公式注入 */

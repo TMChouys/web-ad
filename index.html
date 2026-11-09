@@ -90,6 +90,10 @@
   }
   .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(226,88,62,.55); }
 
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .btn.ghost { background: transparent; border: 2px solid var(--accent); color: var(--accent); box-shadow: none; }
+  .btn.ghost:hover { box-shadow: none; background: rgba(240,160,75,.12); }
+
   /* Countdown */
   .countdown {
     display: flex;
@@ -137,6 +141,42 @@
   .cta h2 { margin-bottom: 12px; color: #fff; }
   .cta p { margin-bottom: 24px; color: #fff3e6; }
   .cta .btn { background: #fff; color: var(--accent-2); box-shadow: none; }
+
+  /* Products */
+  .products { max-width: 1100px; }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .product {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .product:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,.35); }
+  .product img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: #3a281d; }
+  .product .body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .product h3 { font-size: 19px; color: var(--text); }
+  .product .tag {
+    display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px;
+    background: var(--accent-2); color: #fff; font-size: 12px; vertical-align: middle;
+  }
+  .product p { color: var(--muted); font-size: 14px; flex: 1; }
+  .product .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+  .product .cost { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .product .pick {
+    padding: 9px 20px; border-radius: 999px; border: none; cursor: pointer;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff; font: inherit; font-weight: 700;
+    transition: transform .15s;
+  }
+  .product .pick:hover { transform: scale(1.06); }
+  .order form.flash { animation: flash 1s; }
+  @keyframes flash { 0% { box-shadow: 0 0 0 0 rgba(240,160,75,.9); } 100% { box-shadow: 0 0 0 22px rgba(240,160,75,0); } }
 
   /* Order form */
   .order form {
@@ -199,7 +239,10 @@
   <h1>焦糖肉桂拿鐵<br>溫暖登場</h1>
   <p class="sub">嚴選衣索比亞咖啡豆，搭配手工焦糖與錫蘭肉桂，<br>讓每一口都是冬天裡最暖的擁抱。</p>
   <p class="price"><del>NT$150</del><strong>NT$99</strong> 限時優惠</p>
-  <button class="btn" onclick="getCoupon()">立即領取優惠券</button>
+  <div class="hero-actions">
+    <a class="btn" href="#products">逛逛商品</a>
+    <button class="btn ghost" onclick="getCoupon()">領取優惠券</button>
+  </div>
 
   <div class="countdown" aria-label="優惠倒數">
     <div><span id="d">00</span><small>天</small></div>
@@ -230,6 +273,11 @@
   </div>
 </section>
 
+<section class="products" id="products">
+  <h2>人氣商品</h2>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
 <div class="cta">
   <h2>第二杯半價！</h2>
   <p>找朋友一起來，分享這份冬日溫暖。</p>
@@ -252,11 +300,7 @@
     </label>
     <div class="row">
       <label>品項 *
-        <select name="item" id="item" required>
-          <option value="焦糖肉桂拿鐵" data-price="99">焦糖肉桂拿鐵 NT$99</option>
-          <option value="經典美式" data-price="70">經典美式 NT$70</option>
-          <option value="燕麥奶拿鐵" data-price="110">燕麥奶拿鐵 NT$110</option>
-        </select>
+        <select name="item" id="item" required></select>
       </label>
       <label>數量 *
         <input name="qty" id="qty" type="number" min="1" max="20" value="1" required>
@@ -279,7 +323,8 @@
 </section>
 
 <footer>
-  © 2026 晨光咖啡 Morning Light Coffee（虛構品牌，課堂練習作品）
+  © 2026 晨光咖啡 Morning Light Coffee（虛構品牌，課堂練習作品）<br>
+  商品圖片來自 Foodiesfeed 與 PxHere，採 CC0 公共領域授權
 </footer>
 
 <div class="toast" id="toast">🎉 優惠碼：WINTER99 已複製！</div>
@@ -315,8 +360,62 @@
   // 部署 Apps Script 後，把網址貼在這裡
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyB7HgQiwFWwrwAyoyafDgSN8jrCR0Ukl8piy6hTUgmAH7hsOE9YkUymCq8YptUuS3wuQ/exec";
 
+  // 商品清單：名稱與價格要和 apps-script/Code.gs 的 PRICES 一致
+  const PRODUCTS = [
+    { name: "焦糖肉桂拿鐵", price: 99,  img: "images/caramel-latte.jpg",  tag: "冬季限定", desc: "手工焦糖搭配錫蘭肉桂，冬天最暖的一杯。" },
+    { name: "經典美式",     price: 70,  img: "images/americano.jpg",      desc: "衣索比亞單品豆，乾淨明亮、尾韻回甘。" },
+    { name: "燕麥奶拿鐵",   price: 110, img: "images/oat-latte.jpg",      desc: "植物奶的穀物香氣，滑順不膩口。" },
+    { name: "冰美式",       price: 75,  img: "images/iced-americano.jpg", desc: "現萃濃縮加冰塊，清爽提神。" },
+    { name: "卡布奇諾",     price: 95,  img: "images/cappuccino.jpg",     desc: "綿密奶泡與濃縮的黃金比例。" },
+    { name: "濃縮咖啡",     price: 60,  img: "images/espresso.jpg",       desc: "一口喝下最純粹的咖啡香。" },
+  ];
+
   const form = document.getElementById("orderForm");
   const itemSel = document.getElementById("item");
+  const grid = document.getElementById("productGrid");
+
+  PRODUCTS.forEach((p) => {
+    const opt = document.createElement("option");
+    opt.value = p.name;
+    opt.dataset.price = p.price;
+    opt.textContent = `${p.name} NT$${p.price}`;
+    itemSel.appendChild(opt);
+
+    const card = document.createElement("article");
+    card.className = "product";
+    const img = document.createElement("img");
+    img.src = p.img; img.alt = p.name; img.loading = "lazy"; img.width = 800; img.height = 600;
+    const body = document.createElement("div");
+    body.className = "body";
+    const h3 = document.createElement("h3");
+    h3.textContent = p.name;
+    if (p.tag) { const t = document.createElement("span"); t.className = "tag"; t.textContent = p.tag; h3.appendChild(t); }
+    const desc = document.createElement("p");
+    desc.textContent = p.desc;
+    const foot = document.createElement("div");
+    foot.className = "foot";
+    const cost = document.createElement("span");
+    cost.className = "cost"; cost.textContent = `NT$${p.price}`;
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "pick"; btn.textContent = "選購";
+    btn.setAttribute("aria-label", `選購 ${p.name}`);
+    btn.addEventListener("click", () => pickProduct(p.name));
+    foot.append(cost, btn);
+    body.append(h3, desc, foot);
+    card.append(img, body);
+    grid.appendChild(card);
+  });
+
+  function pickProduct(name) {
+    itemSel.value = name;
+    updateTotal();
+    document.getElementById("order").scrollIntoView({ behavior: "smooth" });
+    form.classList.remove("flash");
+    void form.offsetWidth;
+    form.classList.add("flash");
+    form.elements.name.focus({ preventScroll: true });
+  }
+
   const qtyInput = document.getElementById("qty");
   const totalEl = document.getElementById("total");
   const msg = document.getElementById("msg");
